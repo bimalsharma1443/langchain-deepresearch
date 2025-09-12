@@ -2,7 +2,7 @@ from langgraph.graph import StateGraph,START,END
 from langgraph.checkpoint.memory import InMemorySaver
 
 from deep_research.states.state_scope import AgentState,AgentInputState
-from deep_research.nodes.node import clarify_with_user,write_research_brief
+from deep_research.nodes.scope_node import clarify_with_user,write_research_brief
 
 def get_scope_research_workflow():
     """Construct and return the scope research workflow graph."""
