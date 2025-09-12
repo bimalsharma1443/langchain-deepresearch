@@ -9,7 +9,7 @@ def main():
     set_scope()  # Initialize the workflow scope
     save_image("scope_graph.png")  # Save the graphical representation of the scope
     print("Workflow initialized. Here's the graphical representation:")
-    result = invoke("I want to research the best coffee shops in San Francisco.")
+    result = invoke("Planning to go Mumbai in October from Varanasi.")
     for message in result["messages"]:
         message.pretty_print()
 

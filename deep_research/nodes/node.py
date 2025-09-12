@@ -3,7 +3,7 @@ from langgraph.types import Command
 from langgraph.graph import END
 
 from deep_research.states.state_scope import AgentState
-from deep_research.states.schemas import ClarifyWithUser,ResearchQuestion
+from deep_research.states.schemas_scope import ClarifyWithUser,ResearchQuestion
 from deep_research.prompt.prompts import clarify_with_user_instructions
 from deep_research.model import initialize_ollama_model
 from deep_research.util import get_today_str
