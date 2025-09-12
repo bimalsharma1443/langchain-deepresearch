@@ -9,7 +9,7 @@ load_dotenv()
 
 from deep_research.model import initialize_ollama_model
 from deep_research.prompt.prompts import BRIEF_CRITERIA_PROMPT,BRIEF_HALLUCINATION_PROMPT
-from deep_research.graph import get_scope_research_workflow
+from deep_research.scope_graph import get_scope_research_workflow
 
 
 conversation_1 = [

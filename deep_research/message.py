@@ -1,6 +1,6 @@
 from langchain_core.messages import HumanMessage
 from deep_research.util import create_thread
-from deep_research.graph import get_scope_research_workflow
+from deep_research.scope_graph import get_scope_research_workflow
 from deep_research.util import save_scope_image
 
 scope = None  # Global variable to hold the scope object
