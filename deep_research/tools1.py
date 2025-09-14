@@ -25,5 +25,4 @@ def think_tool(query: str) -> str:
     Returns:
         str: Confirmation message that the reflection was recorded.
     """
-    print(f"Researcher reflection: {query}")
     return f"Reflection recorded: {query}"

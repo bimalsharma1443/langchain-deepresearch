@@ -31,11 +31,9 @@ def main():
     of July 2025."""
 
     result = research_invoke(research_brief)
-    print(result["researcher_messages"])
-
-
-
-
+    from rich.markdown import Markdown
+    md = Markdown(result['compressed_research'])
+    print(md.markup)
 
 if __name__ == "__main__":
     main()

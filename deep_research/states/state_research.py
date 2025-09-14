@@ -24,6 +24,6 @@ class ResearcherOutputState(TypedDict):
     This represents the final output of the research process with compressed
     research findings and all raw notes from the research process.
     """
-    compressed_researcher: str
+    compressed_research: str
     raw_notes: Annotated[List[str],operator.add]
     researcher_messages: Annotated[Sequence[BaseMessage],operator.add]

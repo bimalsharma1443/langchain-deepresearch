@@ -43,12 +43,8 @@ def tool_node(state: ResearcherState):
     observations = []
 
     for tool_call in tool_calls:
-        print(f"Executing tool: {tool_call['name']} with args: {tool_call['args']}")
-
-    for tool_call in tool_calls:
         tool = tools_by_name[tool_call["name"]]
         observations.append(tool.invoke(tool_call["args"]))
-        print(f"Tool observation: {observations[-1]}")
 
     # Create tool message outputs
     tool_outputs = [
