@@ -2,9 +2,10 @@ from langgraph.graph import StateGraph,START,END
 from langgraph.checkpoint.memory import InMemorySaver
 
 from deep_research.states.state_research import ResearcherOutputState,ResearcherState
+from deep_research.states.state_supervisor import SupervisorState
 from deep_research.states.state_scope import AgentState,AgentInputState
 from deep_research.nodes.scope_node import clarify_with_user,write_research_brief
-from deep_research.nodes.research_node import llm_call,tool_node,compress_research,should_continue
+from deep_research.nodes.supervisor_node import supervisor,supervisor_tools
 from deep_research.mcp import llm_call as mcp_llm_call,tool_node as mcp_tool_node,compress_research as mcp_compress_research,should_continue as mcp_should_continue
 
 
@@ -28,32 +29,6 @@ def get_scope_research_workflow():
     # compile workflow
     scope_research = workflow.compile(checkpointer=checkpointer)
     return scope_research
-
-def get_reseaerchh_workflow():
-    """Alias for get_scope_research_workflow."""
-    # Build the agent workflow
-    agent_builder = StateGraph(ResearcherState, output_schema=ResearcherOutputState)
-    # Add nodes to the graph
-    agent_builder.add_node("llm_call", llm_call)
-    agent_builder.add_node("tool_node", tool_node)
-    agent_builder.add_node("compress_research", compress_research)
-
-    # Add edges to connect nodes
-    agent_builder.add_edge(START, "llm_call")
-    agent_builder.add_conditional_edges(
-        "llm_call",
-        should_continue,
-        {
-            "tool_node": "tool_node", # Continue research loop
-            "compress_research": "compress_research", # Provide final answer
-        },
-    )
-    agent_builder.add_edge("tool_node", "llm_call") # Loop back for more research
-    agent_builder.add_edge("compress_research", END)
-
-    # Compile the agent
-    researcher_agent = agent_builder.compile()
-    return researcher_agent
 
 def get_research_mcp_workflow():
     """Construct and return the research MCP workflow graph."""
@@ -80,3 +55,12 @@ def get_research_mcp_workflow():
 
     agent_mcp = agent_builder_mcp.compile()
     return agent_mcp
+
+def get_supervisor_workflow():
+
+    supervisor_builder = StateGraph(SupervisorState)
+    supervisor_builder.add_node("supervisor", supervisor)
+    supervisor_builder.add_node("supervisor_tools", supervisor_tools)
+    supervisor_builder.add_edge(START, "supervisor")
+    supervisor_agent = supervisor_builder.compile()
+    return supervisor_agent
