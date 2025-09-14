@@ -5,6 +5,7 @@ from deep_research.states.state_research import ResearcherOutputState,Researcher
 from deep_research.states.state_scope import AgentState,AgentInputState
 from deep_research.nodes.scope_node import clarify_with_user,write_research_brief
 from deep_research.nodes.research_node import llm_call,tool_node,compress_research,should_continue
+from deep_research.mcp import llm_call as mcp_llm_call,tool_node as mcp_tool_node,compress_research as mcp_compress_research,should_continue as mcp_should_continue
 
 
 def get_scope_research_workflow():
@@ -50,10 +51,32 @@ def get_reseaerchh_workflow():
     agent_builder.add_edge("tool_node", "llm_call") # Loop back for more research
     agent_builder.add_edge("compress_research", END)
 
-    agent_builder.add_edge("tool_node", "llm_call") # Loop back for more research
-    agent_builder.add_edge("compress_research", END)
-
     # Compile the agent
     researcher_agent = agent_builder.compile()
     return researcher_agent
-    
+
+def get_research_mcp_workflow():
+    """Construct and return the research MCP workflow graph."""
+    # Build the agent workflow
+    agent_builder_mcp = StateGraph(ResearcherState, output_schema=ResearcherOutputState)
+
+    # Add nodes to the graph
+    agent_builder_mcp.add_node("llm_call", mcp_llm_call)
+    agent_builder_mcp.add_node("tool_node", mcp_tool_node)
+    agent_builder_mcp.add_node("compress_research", mcp_compress_research)
+
+    # Add edges to connect nodes
+    agent_builder_mcp.add_edge(START, "llm_call")
+    agent_builder_mcp.add_conditional_edges(
+        "llm_call",
+        mcp_should_continue,
+        {
+            "tool_node": "tool_node",        # Continue to tool execution
+            "compress_research": "compress_research",  # Compress research findings
+        },
+    )
+    agent_builder_mcp.add_edge("tool_node", "llm_call")  # Loop back for more processing
+    agent_builder_mcp.add_edge("compress_research", END)
+
+    agent_mcp = agent_builder_mcp.compile()
+    return agent_mcp

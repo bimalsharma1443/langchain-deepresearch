@@ -2,9 +2,11 @@ from unittest import result
 from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
-from deep_research.message import research_invoke, set_scope, save_image,set_research
+from deep_research.message import research_invoke, set_scope, save_image,set_research,research_mcp_invoke,set_research_mcp
 
-def main():
+import asyncio
+
+async def main():
     print("Hello from langchain-deepresearch!")
     print("Loading environment variables and initializing workflow...")
     
@@ -17,7 +19,7 @@ def main():
     #     message.pretty_print()
 
     # research
-    set_research()  # Initialize the workflow scope
+    set_research_mcp()  # Initialize the workflow scope
     save_image("research_graph.png")  # Save the graphical representation of the scope
     research_brief = """I want to identify and evaluate the coffee shops in San Francisco that are considered the best based specifically  
     on coffee quality. My research should focus on analyzing and comparing coffee shops within the San Francisco area, 
@@ -30,10 +32,12 @@ def main():
     the top coffee shops in San Francisco, emphasizing their coffee quality according to the latest available data as  
     of July 2025."""
 
-    result = research_invoke(research_brief)
+    # result = research_invoke(research_brief)
+    result = await research_mcp_invoke(research_brief)
     from rich.markdown import Markdown
+    print(result)
     md = Markdown(result['compressed_research'])
     print(md.markup)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
